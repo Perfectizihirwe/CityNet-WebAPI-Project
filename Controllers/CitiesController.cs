@@ -1,3 +1,4 @@
+using System.Text.Json;
 using AutoMapper;
 using CityInfo.API.Entities;
 using CityInfo.API.Models;
@@ -19,22 +20,39 @@ namespace CityInfo.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CityWithoutPOIDto>>> GetCities()
+        public async Task<ActionResult<IEnumerable<CityWithoutPOIDto>>> GetCities([FromQuery] string? name, [FromQuery] string? searchQuery, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            var cityEntities = await _cityRepository.GetCitiesAsync();
+            const int maxCitiesPageSize = 20;
+
+            if (maxCitiesPageSize < pageSize)
+            {
+                pageSize = maxCitiesPageSize;
+            }
+
+            var (cityEntities, paginationMetadata) = await _cityRepository.GetCitiesAsync(name, searchQuery, pageSize, pageNumber);
+
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+
+
             return Ok(_mapper.Map<IEnumerable<CityWithoutPOIDto>>(cityEntities));
             // return Ok(CitiesDataStore.Current.Cities);
         }
 
-        // [HttpGet("{id}")]
-        // public ActionResult<CityDto> GetCity(int id)
-        // {
-        //     var city = CitiesDataStore.Current.Cities.FirstOrDefault(x => x.Id == id);
-        //     if (city == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //     return Ok(city);
-        // }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCity(int id, bool includePOI = false)
+        {
+            var city = await _cityRepository.GetCityAsync(id, includePOI);
+            if (city == null)
+            {
+                return NotFound();
+            }
+            if (includePOI)
+            {
+                return Ok(_mapper.Map<CityDto>(city));
+            }
+
+            return Ok(_mapper.Map<CityWithoutPOIDto>(city));
+
+        }
     }
 }
