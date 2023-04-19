@@ -9,6 +9,8 @@ namespace CityInfo.API.DbContexts
 
         public DbSet<PointOfInterest> PointsOfInterest { get; set; } = null!;
 
+        public DbSet<User> Users { get; set; } = null!;
+
         public CityContext(DbContextOptions<CityContext> options) : base(options)
         {
 
