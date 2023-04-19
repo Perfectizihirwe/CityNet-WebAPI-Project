@@ -21,10 +21,7 @@ namespace CityInfo.API.Entities
 
         public int CityId { get; set; }
 
-        public PointOfInterest(string name)
-        {
-            Name = name;
-        }
+        public PointOfInterest(string name) => Name = name;
 
     }
 }

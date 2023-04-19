@@ -24,11 +24,13 @@ builder.Services.AddControllers((options) =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
+builder.Services.AddTransient<IAuthentication, AuthenticationServices>();
 builder.Services.AddTransient<IMailService, LocalMailService>();
 builder.Services.AddDbContext<CityContext>(
     dbContextOptions => dbContextOptions.UseSqlite("Data Source=City.db"));
 
 builder.Services.AddScoped<ICityRepository, CityRepository>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
