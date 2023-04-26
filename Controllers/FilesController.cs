@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 
 namespace CityInfo.API.Controllers
 {
     [Route("/files")]
+    [Authorize]
     [ApiController]
     public class FilesController : ControllerBase
     {

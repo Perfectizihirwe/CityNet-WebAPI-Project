@@ -14,10 +14,7 @@ namespace CityInfo.API.Entities
         public string Username { get; set; } = string.Empty;
 
         [Required]
-        public byte[]? PasswordHash { get; set; }
-
-        [Required]
-        public byte[]? PasswordSalt { get; set; }
+        public string Password { get; set; } = string.Empty;
 
     }
 }

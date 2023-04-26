@@ -1,25 +1,29 @@
 using System.Security.Cryptography;
+using System.Text;
 
 namespace CityInfo.API.Services
 {
     public class AuthenticationServices : IAuthentication
     {
-        public void CreateHashPassword(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        public string HashPassword(string password)
         {
-            using (var hmac = new HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            }
+            var sha = SHA256.Create();
+            var asByteArray = Encoding.Default.GetBytes(password);
+            var hashedPassword = sha.ComputeHash(asByteArray);
+
+            return Convert.ToBase64String(hashedPassword);
         }
 
-        public bool VerifyHashPassword(string password, byte[] passwordHash, byte[] passwordSalt)
+        public bool ComparePassword(string password, string passwordHash)
         {
-            using (var hmac = new HMACSHA512())
+            var sha = SHA256.Create();
+            var asByteArray = Encoding.Default.GetBytes(password);
+            var hashedPassword = sha.ComputeHash(asByteArray);
+            if (string.Compare(Convert.ToBase64String(hashedPassword), passwordHash) == 0)
             {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return computedHash.SequenceEqual(passwordHash);
+                return true;
             }
+            return false;
         }
     }
 }

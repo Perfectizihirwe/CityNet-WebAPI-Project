@@ -6,8 +6,8 @@ namespace CityInfo.API.Profiles
     {
         public UserProfile()
         {
-            CreateMap<Models.UserForEntityDto, Entities.User>();
-            CreateMap<Entities.User, Models.UserForEntityDto>();
+            CreateMap<Models.UserProfileDto, Entities.User>();
+            CreateMap<Entities.User, Models.UserProfileDto>();
         }
     }
 }
