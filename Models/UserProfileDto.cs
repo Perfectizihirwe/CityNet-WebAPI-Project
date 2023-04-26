@@ -1,6 +1,6 @@
 namespace CityInfo.API.Models
 {
-    public class UserForInputDto
+    public class UserProfileDto
     {
         public string Username { get; set; } = string.Empty;
 
